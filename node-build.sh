@@ -2,7 +2,7 @@
 
 set -Eeuxo pipefail
 
-# k8s repo version to build e2e test binary and kind node image from.
+# k8s repo version to build the kind node image from.
 K8S_REPO_VERSION="${K8S_REPO_VERSION:-master}"
 # Container image repo name to be used for the kind node image.
 KIND_NODE_IMAGE_REPO="${KIND_NODE_IMAGE_REPO:-kindest/node}"
@@ -40,7 +40,7 @@ build_kind_node() {
 
 # Run a kind cluster and check if it's ready.
 run_kind() {
-    sudo cp $GOPATH/src/k8s.io/kubernetes/_output/dockerized/bin/linux/amd64/kubectl /usr/local/bin/
+    sudo cp "$GOPATH/src/k8s.io/kubernetes/_output/dockerized/bin/linux/amd64/kubectl" /usr/local/bin/
 
     echo "Create Kubernetes cluster with kind..."
     kind create cluster --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
