@@ -1,0 +1,22 @@
+language: go
+dist: bionic
+services:
+  - docker
+go:
+  - 1.13.5
+env:
+  global:
+    - K8S_REPO_VERSION=$TRAVIS_TAG
+    - KIND_GIT_REPO=github.com/darkowlzz/kind
+    - KIND_GIT_REPO_BRANCH=master
+    - KIND_NODE_IMAGE_REPO=darkowlzz/kind-node
+    - KIND_NODE_IMAGE_TAG=$TRAVIS_TAG
+before_install:
+  - bash get-k8s.sh
+script:
+  - bash node-build.sh
+deploy:
+  - provider: script
+    script: bash release-image.sh
+    on:
+      tags: true
