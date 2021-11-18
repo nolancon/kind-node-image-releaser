@@ -1,0 +1,59 @@
+name: Build kind node image
+
+on:
+  workflow_dispatch:
+    # Enable manual trigger of this action.
+    inputs:
+      k8sRepoVersion:
+        description: k8s repo version to build kind node image from
+        default: "release-1.22"
+        required: true
+      imageTag:
+        description: Container image tag to be used for the kind node image. This is usually the k8s version
+        default: "1.22"
+        required: true
+      imageRepo:
+        description: Container image repo name to be used for the kind node image. New images are pushed to this repo when released
+        default: "storageos/kind-node"
+        required: true
+      kindGitRepo:
+        description: kind git repo to build kind from
+        default: "github.com/kubernetes-sigs/kind"
+        required: true
+      kindGitBranch:
+        description: kind git repo branch to build kind from
+        default: "main"
+        required: true
+
+env:
+  K8S_REPO_VERSION: ${{ github.event.inputs.k8sRepoVersion }}
+  KIND_NODE_IMAGE_TAG: ${{ github.event.inputs.imageTag }}
+  KIND_NODE_IMAGE_REPO: ${{ github.event.inputs.imageRepo }}
+  KIND_GIT_REPO: ${{ github.event.inputs.kindGitRepo }}
+  KIND_GIT_REPO_BRANCH: ${{ github.event.inputs.kindGitBranch }}
+  
+jobs:
+  build-kind-node-image:
+    runs-on: ubuntu-latest
+    name: Build kind node image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to container registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.io
+          username: ${{ secrets.DH_USERNAME }}
+          password: ${{ secrets.DH_PASSWORD }}
+      - name: Get K8S
+        run: bash get-k8s.sh
+      - name: Build node image
+        run: bash node-build.sh
+      - name: Release node image
+        run: bash release-image.sh

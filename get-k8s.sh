@@ -8,4 +8,8 @@ K8S_REPO_VERSION="${K8S_REPO_VERSION:-master}"
 sudo apt-get install rsync -y
 
 # Do not shallow clone k/k. For building kind node image, git history is needed.
-git clone --branch "$K8S_REPO_VERSION" https://github.com/kubernetes/kubernetes "$GOPATH/src/k8s.io/kubernetes"
+if [[ -d "$GOPATH/src/k8s.io/kubernetes" ]]; then
+    (cd "$GOPATH/src/k8s.io/kubernetes" ; git fetch -a ; git reset --hard origin/$K8S_REPO_VERSION)
+else
+    git clone --branch "$K8S_REPO_VERSION" --single-branch https://github.com/kubernetes/kubernetes "$GOPATH/src/k8s.io/kubernetes"
+fi
