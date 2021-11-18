@@ -34,19 +34,19 @@ build_kind() {
     popd
 
     echo "Checking the installed kind..."
-    kind
+    kind --version
 }
 
 build_kind_node() {
     echo "Customize base image"
-    if [[ -f images/base/entrypoint ]]; then
-        sed -i 's|# mount -o remount,ro /sys|mount --make-shared /sys|' images/base/entrypoint
+    if [[ -f $KIND_GIT_REPO_DIR/images/base/entrypoint ]]; then
+        sed -i 's|# mount -o remount,ro /sys|mount --make-shared /sys|' $KIND_GIT_REPO_DIR/images/base/entrypoint
         echo "Building kind base image..."
         kind build base-image
-    elif [[ -f images/base/files/usr/local/bin/entrypoint ]]; then
+    elif [[ -f $KIND_GIT_REPO_DIR/images/base/files/usr/local/bin/entrypoint ]]; then
         git apply entrypoint.patch
         echo "Building kind base image..."
-        (cd images/base/files/usr/local/bin/entrypoint ; make quick)
+        (cd $KIND_GIT_REPO_DIR ; make quick)
     fi
 
     echo "Building kind node image from latest k/k $K8S_REPO_VERSION..."
