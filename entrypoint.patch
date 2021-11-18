@@ -1,0 +1,13 @@
+diff --git a/images/base/files/usr/local/bin/entrypoint b/images/base/files/usr/local/bin/entrypoint
+index d864259b..82165685 100755
+--- a/images/base/files/usr/local/bin/entrypoint
++++ b/images/base/files/usr/local/bin/entrypoint
+@@ -157,6 +157,8 @@ fix_mount() {
+     fi
+   fi
+ 
++  mount --make-shared /sys
++
+   echo 'INFO: making mounts shared' >&2
+   # for mount propagation
+   mount --make-rshared /

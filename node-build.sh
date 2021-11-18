@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export DOCKER_BUILDKIT=1
+
 set -Eeuxo pipefail
 
 # k8s repo version to build the kind node image from.
@@ -11,7 +13,7 @@ KIND_NODE_IMAGE_TAG="${KIND_NODE_IMAGE_TAG:-test}"
 # KinD git repo to build custom version of kind.
 KIND_GIT_REPO="${KIND_GIT_REPO:-github.com/kubernetes-sigs/kind}"
 # KinD git repo branch to build custom version of kind.
-KIND_GIT_REPO_BRANCH="${KIND_GIT_REPO_BRANCH:-master}"
+KIND_GIT_REPO_BRANCH="${KIND_GIT_REPO_BRANCH:-main}"
 
 
 build_kind() {
@@ -19,7 +21,11 @@ build_kind() {
     KIND_GIT_REPO_DIR=$GOPATH/src/$KIND_IMPORT_PATH
 
     echo "Cloning kind repo..."
-    git clone --branch "$KIND_GIT_REPO_BRANCH" https://"$KIND_GIT_REPO" "$KIND_GIT_REPO_DIR" --depth 1
+    if [[ -d "$KIND_GIT_REPO_DIR" ]]; then
+        (cd "$KIND_GIT_REPO_DIR" ; git fetch -a ; git reset --hard origin/$KIND_GIT_REPO_BRANCH)
+    else
+        git clone --branch "$KIND_GIT_REPO_BRANCH" --single-branch https://"$KIND_GIT_REPO" "$KIND_GIT_REPO_DIR" --depth 1
+    fi
 
     echo "Building kind..."
     pushd "$KIND_GIT_REPO_DIR"
@@ -32,8 +38,17 @@ build_kind() {
 }
 
 build_kind_node() {
-    echo "Building kind base image..."
-    kind build base-image
+    echo "Customize base image"
+    if [[ -f images/base/entrypoint ]]; then
+        sed -i 's|# mount -o remount,ro /sys|mount --make-shared /sys|' images/base/entrypoint
+        echo "Building kind base image..."
+        kind build base-image
+    elif [[ -f images/base/files/usr/local/bin/entrypoint ]]; then
+        git apply entrypoint.patch
+        echo "Building kind base image..."
+        (cd images/base/files/usr/local/bin/entrypoint ; make quick)
+    fi
+
     echo "Building kind node image from latest k/k $K8S_REPO_VERSION..."
     kind build node-image --base-image kindest/base:latest --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
 }
