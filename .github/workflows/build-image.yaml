@@ -31,6 +31,7 @@ env:
   KIND_NODE_IMAGE_REPO: ${{ github.event.inputs.imageRepo }}
   KIND_GIT_REPO: ${{ github.event.inputs.kindGitRepo }}
   KIND_GIT_REPO_BRANCH: ${{ github.event.inputs.kindGitBranch }}
+  GOPATH: ${{ github.workspace }}/go
   
 jobs:
   build-kind-node-image:
