@@ -44,7 +44,8 @@ build_kind_node() {
         echo "Building kind base image..."
         kind build base-image
     elif [[ -f $KIND_GIT_REPO_DIR/images/base/files/usr/local/bin/entrypoint ]]; then
-        git apply entrypoint.patch
+        basePath=$PWD
+        (cd $KIND_GIT_REPO_DIR ; git apply $basePath/entrypoint.patch)
         echo "Building kind base image..."
         (cd $KIND_GIT_REPO_DIR ; make quick)
     fi
