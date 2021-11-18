@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export DOCKER_BUILDKIT=1
-
 set -Eeuxo pipefail
 
 # k8s repo version to build the kind node image from.
@@ -50,6 +48,8 @@ build_kind_node() {
         (cd $KIND_GIT_REPO_DIR/images/base ; make quick)
     fi
 
+    docker images
+    
     echo "Building kind node image from latest k/k $K8S_REPO_VERSION..."
     kind build node-image --base-image kindest/base:latest --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
 }
