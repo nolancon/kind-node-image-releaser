@@ -12,5 +12,6 @@ if [[ -d "$GOPATH/src/k8s.io/kubernetes" ]]; then
     (cd "$GOPATH/src/k8s.io/kubernetes" ; git fetch -a ; git reset --hard origin/$K8S_GIT_REPO_BRANCH)
 else
     git clone --branch "$K8S_GIT_REPO_BRANCH" --single-branch https://github.com/kubernetes/kubernetes "$GOPATH/src/k8s.io/kubernetes"
-    (cd $GOPATH/src/k8s.io/kubernetes ; git checkout v$K8S_VERSION)
 fi
+
+(cd $GOPATH/src/k8s.io/kubernetes ; git checkout v$K8S_VERSION)
