@@ -47,7 +47,7 @@ build_kind_node() {
         basePath=$PWD
         (cd $KIND_GIT_REPO_DIR ; git apply $basePath/entrypoint.patch)
         echo "Building kind base image..."
-        (cd $KIND_GIT_REPO_DIR ; make quick)
+        (cd $KIND_GIT_REPO_DIR/images/base ; make quick)
     fi
 
     echo "Building kind node image from latest k/k $K8S_REPO_VERSION..."
