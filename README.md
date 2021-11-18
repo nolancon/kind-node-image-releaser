@@ -16,7 +16,5 @@ image. The tag must match with an existing kubernetes/kubernetes branch or tag.
 | `KIND_NODE_IMAGE_TAG` | Container image tag to be used for the kind node image. This is usually the k8s version. |
 | `KIND_GIT_REPO` | kind git repo to build kind from. Defaults to github.com/kubernetes-sigs/kind. Can be set to use a kind fork. |
 | `KIND_GIT_REPO_BRANCH` | kind git repo branch to build kind from. Defaults to `main`. |
-| `DOCKER_USERNAME` | Docker hub account username associated with `KIND_NODE_IMAGE_REPO`. |
-| `DOCKER_PASSWORD` | Docker hub account password or access token. |
 
 Some documentation found here: https://github.com/storageos/cluster-operator/blob/master/docs/build-kind-node-image.md

@@ -48,6 +48,9 @@ build_kind_node() {
         (cd $KIND_GIT_REPO_DIR/images/base ; make quick)
     fi
     
+    echo "Base image"
+    docker images | grep "kindest/base"
+
     echo "Building kind node image from new build k/k $K8S_REPO_VERSION..."
     kind build node-image --base-image kindest/base:$(docker images | grep "kindest/base" | head -1 | awk '{print $2}') --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
 }
