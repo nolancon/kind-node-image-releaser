@@ -1,12 +1,13 @@
 diff --git a/images/base/files/usr/local/bin/entrypoint b/images/base/files/usr/local/bin/entrypoint
-index d864259b..82165685 100755
+index d864259b..655e9c50 100755
 --- a/images/base/files/usr/local/bin/entrypoint
 +++ b/images/base/files/usr/local/bin/entrypoint
-@@ -157,6 +157,8 @@ fix_mount() {
+@@ -157,6 +157,9 @@ fix_mount() {
      fi
    fi
  
 +  mount --make-shared /sys
++  mount --make-shared /var
 +
    echo 'INFO: making mounts shared' >&2
    # for mount propagation
