@@ -47,11 +47,9 @@ build_kind_node() {
         echo "Building kind base image..."
         (cd $KIND_GIT_REPO_DIR/images/base ; make quick)
     fi
-
-    docker images
     
-    echo "Building kind node image from latest k/k $K8S_REPO_VERSION..."
-    kind build node-image --base-image kindest/base:latest --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
+    echo "Building kind node image from new build k/k $K8S_REPO_VERSION..."
+    kind build node-image --base-image kindest/base:$(docker images | grep "kindest/base" | head -1 | awk '{print $2}') --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
 }
 
 # Run a kind cluster and check if it's ready.
