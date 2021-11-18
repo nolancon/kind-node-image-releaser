@@ -3,11 +3,11 @@
 set -Eeuxo pipefail
 
 # k8s repo version to build the kind node image from.
-K8S_REPO_VERSION="${K8S_REPO_VERSION:-master}"
+K8S_GIT_REPO_BRANCH="${K8S_GIT_REPO_BRANCH:-master}"
 # Container image repo name to be used for the kind node image.
 KIND_NODE_IMAGE_REPO="${KIND_NODE_IMAGE_REPO:-kindest/node}"
 # Tag of the kind node image. 
-KIND_NODE_IMAGE_TAG="${KIND_NODE_IMAGE_TAG:-test}"
+K8S_VERSION="${K8S_VERSION:-test}"
 # KinD git repo to build custom version of kind.
 KIND_GIT_REPO="${KIND_GIT_REPO:-github.com/kubernetes-sigs/kind}"
 # KinD git repo branch to build custom version of kind.
@@ -51,8 +51,8 @@ build_kind_node() {
     echo "Base image"
     docker images | grep "kindest/base"
 
-    echo "Building kind node image from new build k/k $K8S_REPO_VERSION..."
-    kind build node-image --base-image kindest/base:$(docker images | grep "kindest/base" | head -1 | awk '{print $2}') --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
+    echo "Building kind node image from new build k/k $K8S_GIT_REPO_BRANCH..."
+    kind build node-image --base-image kindest/base:$(docker images | grep "kindest/base" | head -1 | awk '{print $2}') --image "$KIND_NODE_IMAGE_REPO:$K8S_VERSION"
 }
 
 # Run a kind cluster and check if it's ready.
@@ -60,7 +60,7 @@ run_kind() {
     sudo cp "$GOPATH/src/k8s.io/kubernetes/_output/dockerized/bin/linux/amd64/kubectl" /usr/local/bin/
 
     echo "Create Kubernetes cluster with kind..."
-    kind create cluster --image "$KIND_NODE_IMAGE_REPO:$KIND_NODE_IMAGE_TAG"
+    kind create cluster --image "$KIND_NODE_IMAGE_REPO:$K8S_VERSION"
     export KUBECONFIG="${HOME}/.kube/config"
 
     echo "Get cluster info..."
