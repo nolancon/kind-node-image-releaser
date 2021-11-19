@@ -19,4 +19,4 @@ else
     git clone --branch "$K8S_GIT_REPO_BRANCH" https://github.com/kubernetes/kubernetes "$K8S_GIT_REPO_DIR"
 fi
 
-(cd $K8S_GIT_REPO_DIR ; git checkout v$K8S_VERSION)
+(cd $K8S_GIT_REPO_DIR ; git checkout $K8S_VERSION)
