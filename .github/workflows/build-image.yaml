@@ -10,7 +10,7 @@ on:
         required: true
       k8sVersion:
         description: k8s version to build kind node image from
-        default: "1.22"
+        default: "1.22.3"
         required: true
       imageRepo:
         description: Container image repo name to be used for the kind node image. New images are pushed to this repo when released
