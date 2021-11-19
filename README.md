@@ -3,10 +3,6 @@
 Release new [kubernetes-in-docker](https://github.com/kubernetes-sigs/kind) node
 images.
 
-`.travis.yml` uses `$TRAVIS_TAG` to set the `K8S_GIT_REPO_BRANCH` env var. Creating
-a new git tag will trigger a new build for releasing a new version of kind node
-image. The tag must match with an existing kubernetes/kubernetes branch or tag.
-
 ### Environment variables
 
 | Variable Name | Description |

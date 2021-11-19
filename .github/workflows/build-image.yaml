@@ -56,5 +56,7 @@ jobs:
         run: bash get-k8s.sh
       - name: Build node image
         run: bash node-build.sh
+      - name: Test image
+        run: bash run-kind.sh
       - name: Release node image
         run: bash release-image.sh

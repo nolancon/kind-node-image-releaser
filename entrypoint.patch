@@ -1,14 +1,35 @@
 diff --git a/images/base/files/usr/local/bin/entrypoint b/images/base/files/usr/local/bin/entrypoint
-index d864259b..655e9c50 100755
+index d864259b..1ab2cc42 100755
 --- a/images/base/files/usr/local/bin/entrypoint
 +++ b/images/base/files/usr/local/bin/entrypoint
-@@ -157,6 +157,9 @@ fix_mount() {
-     fi
+@@ -142,20 +142,22 @@ fix_mount() {
+     sync
    fi
  
-+  mount --make-shared /sys
-+  mount --make-shared /var
+-  echo 'INFO: remounting /sys read-only'
++  # echo 'INFO: remounting /sys read-only'
+   # systemd-in-a-container should have read only /sys
+   # https://systemd.io/CONTAINER_INTERFACE/
+   # however, we need other things from `docker run --privileged` ...
+   # and this flag also happens to make /sys rw, amongst other things
+   #
+   # This step is ignored when running inside UserNS, because it fails with EACCES.
+-  if ! mount -o remount,ro /sys; then
+-    if [[ -n "$userns" ]]; then
+-      echo 'INFO: UserNS: ignoring mount fail' >&2
+-    else
+-      exit 1
+-    fi
+-  fi
++  # if ! mount -o remount,ro /sys; then
++  #   if [[ -n "$userns" ]]; then
++  #     echo 'INFO: UserNS: ignoring mount fail' >&2
++  #   else
++  #     exit 1
++  #   fi
++  # fi
 +
++  mount --make-shared /sys
+ 
    echo 'INFO: making mounts shared' >&2
    # for mount propagation
-   mount --make-rshared /
