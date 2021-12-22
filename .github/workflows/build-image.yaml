@@ -1,4 +1,4 @@
-name: Build kind node image
+name: Build kind node image and dispatch new tests
 
 on:
   workflow_dispatch:
@@ -60,3 +60,17 @@ jobs:
         run: bash run-kind.sh
       - name: Release node image
         run: bash release-image.sh
+  dispatch:
+    needs: build-kind-node-image
+    strategy:
+      matrix:
+        repo: ['storageos/kubectl-storageos', 'storageos/operator', 'storageos/node-manager', 'storageos/upgrade-guard']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ matrix.repo }}
+          event-type: generate-tests
+          client-payload: '{"latest-kind-node": "${{ github.event.inputs.k8sVersion }}"}'
