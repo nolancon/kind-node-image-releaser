@@ -70,7 +70,7 @@ jobs:
     needs: build-kind-node-image
     strategy:
       matrix:
-        repo: ['storageos/kubectl-storageos']
+        repo: ['storageos/kubectl-storageos', 'storageos/operator', 'storageos/node-manager', 'storageos/upgrade-guard']
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch
