@@ -70,13 +70,13 @@ jobs:
     needs: build-kind-node-image
     strategy:
       matrix:
-        repo: ['storageos/kubectl-storageos', 'storageos/operator', 'storageos/node-manager', 'storageos/upgrade-guard']
+        repo: ['storageos/kubectl-storageos']
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTION_TOKEN }}
           repository: ${{ matrix.repo }}
           event-type: generate-tests
           client-payload: '{"latest-kind-node": "${{ github.event.inputs.k8sVersion }}"}'
